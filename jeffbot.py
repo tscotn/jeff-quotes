@@ -1,6 +1,5 @@
-from random import seed
 from random import randint
-from tkinter import *
+from twython import Twython
 
 # "I'll go tally the votes."
 # "Come on in, guys."
@@ -41,7 +40,7 @@ def print5(str1, str2):
 
 
 def print6(str1, str2):
-    return "It is time to vote. " + str1 + ", you're up."
+    return "It's time to vote. " + str1.capitalize() + ", you're up."
 
 
 def print7(str1, str2):
@@ -60,11 +59,12 @@ def print10(str1, str2):
     return "Wanna know what you're " + str1 + " for?"
 
 
-def print11(str1, str2):
-    return "Worth playing for?"
+# def print11(str1, str2):
+#    return "Worth playing for?"
 
 def print12(str1, str2):
     return "Worth " + str1 + " for?"
+
 
 def print13(str1, str2):
     return "Stay tuned for some " + str1 + " from our next " + str2 + "."
@@ -74,18 +74,29 @@ quoteList = ["tally", "votes", "come on in", "guys", "fire", "flint", "life", "g
              "vote", "you're up", "thirty-nine days", "twenty people", "one survivor", "playing", "worth",
              "stay tuned", "episode", "spoken"]
 
-printList = [print0, print1, print2, print3, print4, print5, print6, print7, print8, print9, print10, print11,
-             print12, print13]
-
-root = Tk()
-root.title("Jeff Quotes")
+printList = [print0, print1, print2, print3, print4, print5, print6, print7, print8, print9, print10,
+             print12, print13]  # print11
 
 
-def print_jeff_quote():
-    jeff_quote_label = Label(root, text=printList[randint(0, len(printList))](quoteList[randint(0, len(quoteList))],
-                                                                  quoteList[randint(0, len(quoteList))]))
-    jeff_quote_label.pack()
+def generateTweet():
+    return printList[randint(0, len(printList) - 1)](quoteList[randint(0, len(quoteList) - 1)],
+                                                 quoteList[randint(0, len(quoteList) - 1)])
 
-Button(root, text="Print Jeff Quote", command=print_jeff_quote).pack()
 
-root.mainloop()
+APP_KEY = ''
+APP_SECRET = ''
+ACCESS_TOKEN = ''
+ACCESS_SECRET = ''
+twitter = Twython(APP_KEY, APP_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
+
+def main():
+    tweet = generateTweet()
+
+    while (len(tweet) > 140):
+        tweet = generateTweet()
+
+    print(tweet)
+    twitter.update_status(status=tweet)
+
+if __name__ == "__main__":
+    main()
